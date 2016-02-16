@@ -110,6 +110,7 @@ class tx_cabagloginas implements \TYPO3\CMS\Backend\Toolbar\ToolbarItemHookInter
 		$parameterArray['userid'] = (string) $user['uid'];
 		$parameterArray['timeout'] = (string) $timeout = time() + 3600;
 		// Check user settings for any redirect page
+		// Added "" for user uid
 		if ($user['felogin_redirectPid']) {
 			$parameterArray['redirecturl'] = $this->getRedirectUrl($user['felogin_redirectPid']);
 		} else {
@@ -117,7 +118,7 @@ class tx_cabagloginas implements \TYPO3\CMS\Backend\Toolbar\ToolbarItemHookInter
 			$userGroup = $GLOBALS['TYPO3_DB']->exec_SELECTgetSingleRow(
 				'fe_groups.felogin_redirectPid',
 				'fe_users, fe_groups',
-				'fe_groups.felogin_redirectPid != "" AND fe_groups.uid IN (fe_users.usergroup) AND fe_users.uid = ' . $user['uid']
+				'fe_groups.felogin_redirectPid != "" AND fe_groups.uid IN (fe_users.usergroup) AND fe_users.uid = "' . $user['uid'].'"'
 			);
 			if (is_array($userGroup) && !empty($userGroup['felogin_redirectPid'])) {
 				$parameterArray['redirecturl'] = $this->getRedirectUrl($userGroup['felogin_redirectPid']);

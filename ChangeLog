@@ -1,3 +1,11 @@
+2015-04-22 Nils Blattner <nb@cabag.ch>
+	* version 1.2.2
+	* [BUG] changed it so the session value for logged in users is set and saved directly
+
+2015-01-19 Lavinia Negru <ln@cabag.ch>
+	* version 1.2.1
+	* [6.2] modified tx_cabagloginas.6.2 to modifie db select for user uid
+	
 2014-09-30 Nils Blattner <nb@cabag.ch>
 	* version 1.2.0
 	* [6.2] fixed compatibility issues with TYPO3 6.2
