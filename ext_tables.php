@@ -5,6 +5,8 @@ if (!defined ('TYPO3_MODE')) {
 
 require_once(t3lib_extMgm::extPath('cabag_loginas') . 'class.tx_cabagloginas.php');
 
+$GLOBALS['TYPO3_CONF_VARS']['typo3/backend.php']['additionalBackendItems'][] = t3lib_extMgm::extPath('cabag_loginas') . 'cabagloginas_toolbar.php';
+
 $tempColumns = array (
 	'tx_cabagloginas_loginas' => array (		
 		'exclude' => 0,		

@@ -34,10 +34,10 @@ class tx_cabagloginas_sv1 extends tx_sv_authbase {
 	
 	function getUser() {
 		$row = false;
-		
 		$cabag_loginas_data = t3lib_div::_GP('tx_cabagloginas');
-		if(count($cabag_loginas_data) && $cabag_loginas_data['userid'] && $cabag_loginas_data['verification']) {
-			if(md5($GLOBALS['$TYPO3_CONF_VARS']['SYS']['encryptionKey'].intval($cabag_loginas_data['userid'])) == $cabag_loginas_data['verification']) {
+		$ses_id = $_COOKIE['be_typo_user'];
+		if(count($cabag_loginas_data) && $cabag_loginas_data['userid'] && $cabag_loginas_data['verification'] && intval($cabag_loginas_data['timeout']) > time() && $ses_id) {
+			if(md5($GLOBALS['$TYPO3_CONF_VARS']['SYS']['encryptionKey'].intval($cabag_loginas_data['userid']).intval($cabag_loginas_data['timeout']).$ses_id) == $cabag_loginas_data['verification']) {
 				$user = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 					'*',
 					'fe_users',

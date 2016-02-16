@@ -1,4 +1,9 @@
 2010-02-15 Dimitri König  <dk@cabag.ch>
+	* version 0.0.5
+	* additional security
+	* toolbar button if a fe_user exist with same email address as backend user 
+
+2010-02-15 Dimitri König  <dk@cabag.ch>
 	* version 0.0.4
 	* username will be shown instead of name
 
