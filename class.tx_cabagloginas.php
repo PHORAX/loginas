@@ -108,7 +108,7 @@ class tx_cabagloginas implements backend_toolbarItem {
 
 		$timeout = time()+3600;
 		$ses_id = $GLOBALS['BE_USER']->user['ses_id'];
-		$verification = md5($GLOBALS['$TYPO3_CONF_VARS']['SYS']['encryptionKey'].$userid.$timeout.$ses_id);
+		$verification = md5($GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'].$userid.$timeout.$ses_id);
 		$link = '../?tx_cabagloginas[timeout]='.$timeout.'&tx_cabagloginas[userid]='.$userid.'&tx_cabagloginas[verification]='.$verification;
 		return $link;
 	}
