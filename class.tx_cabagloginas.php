@@ -102,7 +102,7 @@ class tx_cabagloginas implements backend_toolbarItem {
 	}
 
 	function getHREF($userid) {
-		$timeout = time()+300;
+		$timeout = time()+3600;
 		$ses_id = $GLOBALS['BE_USER']->user['ses_id'];
 		$verification = md5($GLOBALS['$TYPO3_CONF_VARS']['SYS']['encryptionKey'].$userid.$timeout.$ses_id);
 		$link = 'http://'.$_SERVER['SERVER_NAME'].'?tx_cabagloginas[timeout]='.$timeout.'&tx_cabagloginas[userid]='.$userid.'&tx_cabagloginas[verification]='.$verification;

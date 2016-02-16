@@ -11,7 +11,7 @@
  ***************************************************************/
 
 $EM_CONF[$_EXTKEY] = array (
-	'title' => 'CAB AG Login As',
+	'title' => 'CAB Login As',
 	'description' => 'Within the backend you have a button in the fe_user table to quickly login as this fe user in frontend.',
 	'category' => 'be',
 	'author' => 'Dimitri König',
@@ -29,7 +29,7 @@ $EM_CONF[$_EXTKEY] = array (
 	'clearCacheOnLoad' => 0,
 	'lockType' => '',
 	'author_company' => '',
-	'version' => '0.0.7',
+	'version' => '0.0.8',
 	'constraints' => 
 	array (
 		'depends' => 
