@@ -89,7 +89,7 @@ class tx_cabagloginas implements backend_toolbarItem {
 	function getLoginAsIconInTable($userid) {
 		$label = '<img src="sysext/t3skin/icons/gfx/su_back.gif" width="16" height="16" alt="" title="" />';
 		$link = $this->getHREF($userid);
-		$content = '<a href="'.$link.'" target="_blank">'.$label.'</a>';
+		$content = '<a class="toolbar-item" href="'.$link.'" target="_blank">'.$label.'</a>';
 		return $content;
 	}
 }
