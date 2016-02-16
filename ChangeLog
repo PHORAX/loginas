@@ -1,3 +1,7 @@
+2013-07-23 Nicole Cordes <typo3@cordes.co>
+	* version 1.1.8
+	* format code according to coding guidelines
+
 2013-04-09 Toby Merz <tm@cabag.ch>
 	* version 1.1.7
 	* adapted extension to clean up requirements for TER
@@ -47,16 +51,16 @@
 
 2010-03-19 Dimitri Koenig  <dk@cabag.ch>
 	* version 0.0.7
-	* better toolbar menu allowing multiple fe_user accounts with the same email address to be shown 
+	* better toolbar menu allowing multiple fe_user accounts with the same email address to be shown
 
 2010-03-16 Dimitri Koenig  <dk@cabag.ch>
 	* version 0.0.6
-	* small css change 
+	* small css change
 
 2010-03-16 Dimitri Koenig  <dk@cabag.ch>
 	* version 0.0.5
 	* additional security
-	* toolbar button if a fe_user exist with same email address as backend user 
+	* toolbar button if a fe_user exist with same email address as backend user
 
 2010-02-15 Dimitri Koenig  <dk@cabag.ch>
 	* version 0.0.4
