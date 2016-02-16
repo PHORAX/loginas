@@ -1,3 +1,7 @@
+2010-11-16 Nils Blattner <nb@cabag.ch>
+	* version 1.1.0
+	* fixed cabag_loginas.js so it does not produce a JS-Error when the loginas-menu is not present
+
 2010-09-07 Dimitri Koenig  <dk@cabag.ch>
 	* version 1.0.10
 	* limited display of FE users to 15, just in case you have over 400.000 fe_users with the same email address. Thx to Nils Blattner :-)
