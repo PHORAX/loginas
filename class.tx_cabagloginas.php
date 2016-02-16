@@ -42,7 +42,10 @@ class tx_cabagloginas implements backend_toolbarItem {
 		$this->users = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 			'*',
 			'fe_users',
-			'email = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($email, 'fe_users') . ' AND disable = 0 AND deleted = 0'
+			'email = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($email, 'fe_users') . ' AND disable = 0 AND deleted = 0',
+			'',
+			'',
+			'15'
 		);
 	}
 
@@ -102,10 +105,11 @@ class tx_cabagloginas implements backend_toolbarItem {
 	}
 
 	function getHREF($userid) {
+
 		$timeout = time()+3600;
 		$ses_id = $GLOBALS['BE_USER']->user['ses_id'];
 		$verification = md5($GLOBALS['$TYPO3_CONF_VARS']['SYS']['encryptionKey'].$userid.$timeout.$ses_id);
-		$link = 'http://'.$_SERVER['SERVER_NAME'].'?tx_cabagloginas[timeout]='.$timeout.'&tx_cabagloginas[userid]='.$userid.'&tx_cabagloginas[verification]='.$verification;
+		$link = '../?tx_cabagloginas[timeout]='.$timeout.'&tx_cabagloginas[userid]='.$userid.'&tx_cabagloginas[verification]='.$verification;
 		return $link;
 	}
 	function getLink($data) {
