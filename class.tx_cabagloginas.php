@@ -136,7 +136,7 @@ class tx_cabagloginas implements backend_toolbarItem {
 		$extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['cabag_loginas']);
 		
 		if (empty($extConf['enableDomainBasedRedirect'])) {
-			return '../';
+			return '../' . $additionalParameters;
 		}
 		
 		$domains = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
@@ -149,13 +149,13 @@ class tx_cabagloginas implements backend_toolbarItem {
 		);
 		
 		if (count($domains) === 0) {
-			return '../';
+			return '../' . $additionalParameters;
 		}
 		
 		$redirect = trim($domains[0]['tx_cabagfileexplorer_redirect_to']);
 		
 		if (empty($redirect)) {
-			return '../';
+			return '../' . $additionalParameters;
 		}
 		
 		$redirect = preg_replace('#^/+#', '', $redirect);

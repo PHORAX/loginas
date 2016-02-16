@@ -1,3 +1,7 @@
+2011-10-06 Nils Blattner <nb@cabag.ch>
+	* version 1.1.5
+	* fixed a bug when no domain record based redirect was set
+
 2011-09-21 Nils Blattner <nb@cabag.ch>
 	* version 1.1.4
 	* added the possibility to redirect after the login to a specific page, based on the domain
