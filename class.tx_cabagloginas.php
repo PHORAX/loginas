@@ -109,7 +109,7 @@ class tx_cabagloginas implements backend_toolbarItem {
 		$timeout = time()+3600;
 		$ses_id = $GLOBALS['BE_USER']->user['ses_id'];
 		$verification = md5($GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'].$userid.$timeout.$ses_id);
-		$link = '../?tx_cabagloginas[timeout]='.$timeout.'&tx_cabagloginas[userid]='.$userid.'&tx_cabagloginas[verification]='.$verification;
+		$link = $this->getRedirectForCurrentDomain('?tx_cabagloginas[timeout]=' . $timeout . '&tx_cabagloginas[userid]=' . $userid . '&tx_cabagloginas[verification]=' . $verification);
 		return $link;
 	}
 	function getLink($data) {
@@ -124,6 +124,49 @@ class tx_cabagloginas implements backend_toolbarItem {
 		$link = $this->getHREF($userid);
 		$content = '<a class="toolbar-item" href="'.$link.'" target="_blank">'.$label.'</a>';
 		return $content;
+	}
+	
+	/**
+	 * Finds the redirect link for the current domain.
+	 *
+	 * @param string $additionalParameters Any additional parameters (with leading ?)
+	 * @return string '../' if nothing was found, the link in the form of http://www.domain.tld/link/page.html otherwise.
+	 */
+	function getRedirectForCurrentDomain($additionalParameters = '') {
+		$extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['cabag_loginas']);
+		
+		if (empty($extConf['enableDomainBasedRedirect'])) {
+			return '../';
+		}
+		
+		$domains = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+			'domainName, tx_cabagfileexplorer_redirect_to',
+			'sys_domain',
+			'hidden = 0 AND domainName = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr(t3lib_div::getIndpEnv('HTTP_HOST'), 'sys_domain'),
+			'',
+			'',
+			1
+		);
+		
+		if (count($domains) === 0) {
+			return '../';
+		}
+		
+		$redirect = trim($domains[0]['tx_cabagfileexplorer_redirect_to']);
+		
+		if (empty($redirect)) {
+			return '../';
+		}
+		
+		$redirect = preg_replace('#^/+#', '', $redirect);
+		
+		$protocol = 'http' . (t3lib_div::getIndpEnv('TYPO3_SSL') ? 's' : '') . '://';
+		
+		$glue = preg_match('/\?/', $redirect) ? '&' : '?';
+		
+		$additionalParameters = empty($additionalParameters) ? '' : $glue . preg_replace('/^\?/', '', $additionalParameters);
+		
+		return $protocol . $domains[0]['domainName'] . '/' . $redirect . $additionalParameters;
 	}
 }
 

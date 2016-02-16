@@ -1,2 +1,5 @@
 # cat=basic/enable/10; type=String; label=Displayed text. Default: [#pid# / #uid#] #username# (#email#)
 defLinkText = [#pid# / #uid#] #username# (#email#)
+
+# cat=basic//10; type=boolean; label=Enable extra fields in the sys_domain table to allow redirects to specific pages per domain.
+enableDomainBasedRedirect = 0

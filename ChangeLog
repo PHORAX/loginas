@@ -1,3 +1,9 @@
+2011-09-21 Nils Blattner <nb@cabag.ch>
+	* version 1.1.4
+	* added the possibility to redirect after the login to a specific page, based on the domain
+	* added an option in ext_conf_template.txt to enable the additional fields in sys_domain (enableDomainBasedRedirect)
+	* added the new field to ext_tables.sql and ext_tables.php
+
 2011-06-29 Dimitri Koenig  <dk@cabag.ch>
 	* version 1.1.3
 	* fixed bug in hashkey generation
