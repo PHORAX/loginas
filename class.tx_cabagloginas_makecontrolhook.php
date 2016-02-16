@@ -25,24 +25,41 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-class tx_cabagloginas {
-	function getHREF($userid) {
-		$verification = md5($GLOBALS['$TYPO3_CONF_VARS']['SYS']['encryptionKey'].$userid);
-		$link = 'http://'.$_SERVER['SERVER_NAME'].'?tx_cabagloginas[userid]='.$userid.'&tx_cabagloginas[verification]='.$verification;
-		return $link;
-	}
-	function getLink($data) {
-		$label = $data['label'] . ' ' . $data['row']['name'];
-		$link = $this->getHREF($data['row']['uid']);
-		$content = '<a href="'.$link.'" target="_blank" style="text-decoration:underline;">'.$label.'</a>'; 
-		return $content;
-	}
+require_once(t3lib_extMgm::extPath('cabag_loginas').'class.tx_cabagloginas.php');
+require_once(PATH_typo3.'interfaces/interface.localrecordlist_actionsHook.php');
 
-	function getLoginAsIconInTable($userid) {
-		$label = '<img src="sysext/t3skin/icons/gfx/su_back.gif" width="16" height="16" alt="" title="" />';
-		$link = $this->getHREF($userid);
-		$content = '<a href="'.$link.'" target="_blank">'.$label.'</a>'; 
-		return $content;
+class tx_cabagloginas_makecontrolhook implements localRecordList_actionsHook {
+	var $loginAsObj = null;
+
+	public function tx_cabagloginas_makecontrolhook() {
+		$this->loginAsObj = new tx_cabagloginas;
+	}
+	
+	public function makeClip($table, $row, $cells, &$parentObject) {
+		return $cells;
+	}
+	
+	public function makeControl($table, $row, $cells, &$parentObject) {
+		if($table == 'fe_users') {
+			$tempcells = array();
+			foreach($cells as $key => $value) {
+				if(strpos($value, 'clear.gif') === false) {
+					$tempcells[$key] = $value;
+				}
+			}
+			$cells = $tempcells;
+			$loginas = $this->loginAsObj->getLoginAsIconInTable($row['uid']);
+			$cells['loginas'] = $loginas;
+		}
+		return $cells;
+	}
+	
+	public function renderListHeader($table, $currentIdList, $headerColumns, &$parentObject) {
+		return $headerColumns;
+	}
+	
+	public function renderListHeaderActions($table, $currentIdList, $cells, &$parentObject) {
+		return $cells;
 	}
 }
 
