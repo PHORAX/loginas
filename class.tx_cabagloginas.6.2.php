@@ -144,8 +144,9 @@ class tx_cabagloginas implements \TYPO3\CMS\Backend\Toolbar\ToolbarItemHookInter
 
 	function getLoginAsIconInTable($user, $title = '') {
 		$label = '<img' . t3lib_iconWorks::skinImg($this->backPath, 'gfx/su_back.gif', 'width="16" height="16"') . ' title="' . $title . '" alt="' . $title . '" />';
+		$label = '<span class="t3-icon t3-icon-actions t3-icon-actions-system t3-icon-system-backend-user-emulate">&nbsp;</span>';
 		$link = $this->getHREF($user);
-		$content = '<a class="toolbar-item" href="' . $link . '" target="_blank">' . $label . '</a>';
+		$content = '<a href="' . $link . '" target="_blank">' . $label . '</a>';
 
 		return $content;
 	}

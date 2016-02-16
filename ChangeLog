@@ -1,3 +1,7 @@
+2015-12-21 Tizian Schmidlin <st@cabag.ch>
+	* version 1.2.3
+	* fixed the styling of the switch link in the list module
+
 2015-04-22 Nils Blattner <nb@cabag.ch>
 	* version 1.2.2
 	* [BUG] changed it so the session value for logged in users is set and saved directly
