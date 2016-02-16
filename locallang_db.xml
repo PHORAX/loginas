@@ -7,11 +7,11 @@
 	<data type="array">
 		<languageKey index="default" type="array">
 			<label index="fe_users.tx_cabagloginas_loginas">Login As</label>
-			<label index="sys_domain.tx_cabagfileexplorer_redirect_to">Redirect to this url after the login:</label>
+			<label index="sys_domain.tx_cabagfileexplorer_redirect_to">Redirect to this url path after the login:</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="fe_users.tx_cabagloginas_loginas">Einloggen als</label>
-			<label index="sys_domain.tx_cabagfileexplorer_redirect_to">Zu dieser URL umleiten nach dem Login:</label>
+			<label index="sys_domain.tx_cabagfileexplorer_redirect_to">Nach dem Login auf diesen Pfad weiterleiten:</label>
 		</languageKey>
 	</data>
 </T3locallang>

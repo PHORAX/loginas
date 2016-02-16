@@ -1,3 +1,13 @@
+2014-09-30 Nils Blattner <nb@cabag.ch>
+	* version 1.2.0
+	* [6.2] fixed compatibility issues with TYPO3 6.2
+	* [6.2] set TYPO3 dependency to 4.5.0-6.2.99
+	* [TASK] removed trailing ?> from php files
+
+2013-07-24 Nicole Cordes <typo3@cordes.co>
+	* version 1.1.9
+	* fixed respecting of domain records for multi domain systems
+
 2013-07-23 Nicole Cordes <typo3@cordes.co>
 	* version 1.1.8
 	* format code according to coding guidelines

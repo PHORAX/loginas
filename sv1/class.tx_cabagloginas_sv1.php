@@ -35,9 +35,13 @@ class tx_cabagloginas_sv1 extends tx_sv_authbase {
 	function getUser() {
 		$row = FALSE;
 		$cabag_loginas_data = t3lib_div::_GP('tx_cabagloginas');
-		$ses_id = $_COOKIE['be_typo_user'];
-		if (count($cabag_loginas_data) && $cabag_loginas_data['userid'] && $cabag_loginas_data['verification'] && intval($cabag_loginas_data['timeout']) > time() && $ses_id) {
-			if (md5($GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'] . intval($cabag_loginas_data['userid']) . intval($cabag_loginas_data['timeout']) . $ses_id) == $cabag_loginas_data['verification']) {
+		if (isset($cabag_loginas_data['verification'])) {
+			$ses_id = $_COOKIE['be_typo_user'];
+			$verificationHash = $cabag_loginas_data['verification'];
+			unset($cabag_loginas_data['verification']);
+			if (md5($GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'] . $ses_id . serialize($cabag_loginas_data)) === $verificationHash &&
+				$cabag_loginas_data['timeout'] > time()) {
+
 				$user = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 					'*',
 					'fe_users',
@@ -50,7 +54,6 @@ class tx_cabagloginas_sv1 extends tx_sv_authbase {
 
 			}
 		}
-
 
 		return $row;
 	}
@@ -70,5 +73,3 @@ class tx_cabagloginas_sv1 extends tx_sv_authbase {
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/cabag_loginas/sv1/class.tx_cabagloginas_sv1.php"]) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/cabag_loginas/sv1/class.tx_cabagloginas_sv1.php"]);
 }
-
-?>

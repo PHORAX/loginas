@@ -3,7 +3,10 @@ if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 
-require_once(t3lib_extMgm::extPath('cabag_loginas') . 'class.tx_cabagloginas.php');
+
+if (version_compare(TYPO3_version, '6.2', '<')) {
+	require_once(t3lib_extMgm::extPath('cabag_loginas') . 'class.tx_cabagloginas.php');
+}
 
 $GLOBALS['TYPO3_CONF_VARS']['typo3/backend.php']['additionalBackendItems'][] = t3lib_extMgm::extPath('cabag_loginas') . 'cabagloginas_toolbar.php';
 
@@ -17,7 +20,6 @@ $tempColumns = array(
 		)
 	),
 );
-
 
 t3lib_div::loadTCA('fe_users');
 t3lib_extMgm::addTCAcolumns('fe_users', $tempColumns, 1);
@@ -45,4 +47,3 @@ if (!empty($tx_cabagloginas_extconf['enableDomainBasedRedirect'])) {
 	t3lib_extMgm::addTCAcolumns('sys_domain', $tempColumns, 1);
 	t3lib_extMgm::addToAllTCAtypes('sys_domain', 'tx_cabagfileexplorer_redirect_to');
 }
-?>

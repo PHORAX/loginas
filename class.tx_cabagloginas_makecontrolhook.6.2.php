@@ -25,10 +25,7 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-require_once(t3lib_extMgm::extPath('cabag_loginas') . 'class.tx_cabagloginas.php');
-require_once(PATH_typo3 . 'interfaces/interface.localrecordlist_actionsHook.php');
-
-class tx_cabagloginas_makecontrolhook implements localRecordList_actionsHook {
+class tx_cabagloginas_makecontrolhook implements \TYPO3\CMS\Recordlist\RecordList\RecordListHookInterface {
 	var $loginAsObj = NULL;
 
 	public function tx_cabagloginas_makecontrolhook() {

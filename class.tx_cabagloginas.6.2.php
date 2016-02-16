@@ -25,16 +25,14 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-require_once(PATH_typo3 . 'interfaces/interface.backend_toolbaritem.php');
-
-class tx_cabagloginas implements backend_toolbarItem {
+class tx_cabagloginas implements \TYPO3\CMS\Backend\Toolbar\ToolbarItemHookInterface {
 	protected $backendReference;
 
 	protected $users = array();
 
 	protected $EXTKEY = 'cabag_loginas';
 
-	public function __construct(TYPO3backend &$backendReference = NULL) {
+	public function __construct(\TYPO3\CMS\Backend\Controller\BackendController &$backendReference = NULL) {
 		$GLOBALS['LANG']->includeLLFile('EXT:cabag_loginas/locallang_db.xml');
 		$this->backendReference = $backendReference;
 
