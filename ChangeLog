@@ -1,3 +1,7 @@
+2012-02-15 Dimitri Koenig  <dk@cabag.ch>
+	* version 1.1.6
+	* added loginas field in fe_users table due to TYPO3 4.5 tca conventions
+
 2011-10-06 Nils Blattner <nb@cabag.ch>
 	* version 1.1.5
 	* fixed a bug when no domain record based redirect was set
