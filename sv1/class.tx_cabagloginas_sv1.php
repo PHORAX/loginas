@@ -45,10 +45,12 @@ class tx_cabagloginas_sv1 extends tx_sv_authbase {
 				);
 				if($user[0]) {
 					$row = $this->rowdata = $user[0];
+					$GLOBALS["TSFE"]->fe_user->setKey('ses', 'tx_cabagloginas', true);
 				}
 				
 			}
 		}
+		
 
 		return $row;
 	}
