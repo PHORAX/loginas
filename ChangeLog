@@ -1,3 +1,7 @@
+2011-02-04 Nils Blattner <nb@cabag.ch>
+	* version 1.1.1
+	* fixed cabag_loginas.js so it really does not produce a JS-Error when the loginas-menu is not present
+
 2010-11-16 Nils Blattner <nb@cabag.ch>
 	* version 1.1.0
 	* fixed cabag_loginas.js so it does not produce a JS-Error when the loginas-menu is not present

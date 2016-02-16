@@ -50,11 +50,13 @@ var cabagLoginAsMenu = Class.create({
 	 * positions the menu below the toolbar icon, let's do some math!
 	 */
 	positionMenu: function() {
-		if (!$('tx-cabagloginas-menu')) return;
+		var menuElement = $('tx-cabagloginas-menu');
+		if (!menuElement) return;
+		if (!menuElement.down('ul')) return;
 		var calculatedOffset = 0;
-		var parentWidth      = $('tx-cabagloginas-menu').getWidth();
-		var ownWidth         = $$('#tx-cabagloginas-menu ul')[0].getWidth();
-		var parentSiblings   = $('tx-cabagloginas-menu').previousSiblings();
+		var parentWidth      = menuElement.getWidth();
+		var ownWidth         = menuElement.down('ul').getWidth();
+		var parentSiblings   = menuElement.previousSiblings();
 
 		parentSiblings.each(function(toolbarItem) {
 			calculatedOffset += toolbarItem.getWidth() - 1;
