@@ -32,7 +32,7 @@ class tx_cabagloginas {
 		return $link;
 	}
 	function getLink($data) {
-		$label = $data['label'] . ' ' . $data['row']['name'];
+		$label = $data['label'] . ' ' . $data['row']['username'];
 		$link = $this->getHREF($data['row']['uid']);
 		$content = '<a href="'.$link.'" target="_blank" style="text-decoration:underline;">'.$label.'</a>'; 
 		return $content;
