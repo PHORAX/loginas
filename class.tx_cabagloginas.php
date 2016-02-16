@@ -29,12 +29,21 @@ require_once(PATH_typo3 . 'interfaces/interface.backend_toolbaritem.php');
 
 class tx_cabagloginas implements backend_toolbarItem {
 	protected $backendReference;
+	protected $users = array();
 
 	protected $EXTKEY = 'cabag_loginas';
 
 	public function __construct(TYPO3backend &$backendReference = null) {
 		$GLOBALS['LANG']->includeLLFile('EXT:cabag_loginas/locallang_db.xml');
 		$this->backendReference = $backendReference;
+
+		$email = $GLOBALS['BE_USER']->user['email'];
+
+		$this->users = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+			'*',
+			'fe_users',
+			'email = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($email, 'fe_users') . ' AND disable = 0 AND deleted = 0'
+		);
 	}
 
 	public function checkAccess() {
@@ -43,33 +52,53 @@ class tx_cabagloginas implements backend_toolbarItem {
 	}
 
 	public function render() {
-		$email = $GLOBALS['BE_USER']->user['email'];
-		$realName = $GLOBALS['BE_USER']->user['realName'];
-		$userID = $GLOBALS['BE_USER']->user['uid'];
-
 		$this->backendReference->addCssFile('cabag_loginas', t3lib_extMgm::extRelPath($this->EXTKEY) . 'cabag_loginas.css');
+		$this->backendReference->addJavascriptFile(t3lib_extMgm::extRelPath($this->EXTKEY).'cabag_loginas.js');
+
 		$toolbarMenu = array();
+
 		$title = $GLOBALS['LANG']->getLL('fe_users.tx_cabagloginas_loginas', true);
+		$ext_conf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['cabag_loginas']);
+		$defLinkText = trim($ext_conf['defLinkText']);
+		if(empty($defLinkText) || strstr($defLinkText, '#') === false || strstr($defLinkText, 'password') !== false) {
+			$defLinkText = '[#pid# / #uid#] #username# (#email#)';
+		}
 
-		$users = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-			'uid',
-			'fe_users',
-			'email = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($email, 'fe_users') . ' AND disable = 0 AND deleted = 0',
-			'',
-			'lastlogin DESC',
-			'1'
-		);
+		if(count($this->users)) {
+			if(count($this->users) == 1) {
+				$title .= ' ' . $this->formatLinkText($this->users[0], $defLinkText);
+				$toolbarMenu[] = $this->getLoginAsIconInTable($this->users[0]['uid'], $title);
+			} else {
+				$toolbarMenu[] = '<a href="#" class="toolbar-item"><img'.t3lib_iconWorks::skinImg($this->backPath, 'gfx/su_back.gif', 'width="16" height="16"').' title="'.$title.'" alt="'.$title.'" /></a>';
 
-		if($users[0]['uid']) {
-				// toolbar item icon
-			$toolbarMenu[] = $this->getLoginAsIconInTable($users[0]['uid']);
-	
+				$toolbarMenu[] = '<ul class="toolbar-item-menu" style="display: none;">';
+
+				foreach($this->users as $user) {
+					$linktext = $this->formatLinkText($user, $defLinkText);
+					$link = $this->getHREF($user['uid']);
+					$toolbarMenu[] = '<li><a href="' . htmlspecialchars($link) . '" target="_blank"><img'.t3lib_iconWorks::skinImg($this->backPath, 'gfx/i/fe_users.gif', 'width="16" height="16"').' title="'.$title.'" alt="'.$title.'" /> ' . $linktext . '</a></li>';
+				}
+
+				$toolbarMenu[] = '</ul>';
+			}
+
 			return implode("\n", $toolbarMenu);
 		}
 	}
 
+	public function formatLinkText($user, $defLinkText) {
+		foreach($user as $key => $value) {
+			$defLinkText = str_replace('#' . $key . '#', $value, $defLinkText);
+		}
+		return $defLinkText;
+	}
+
 	public function getAdditionalAttributes() {
-		return ' id="tx-cabagloginas-menu"';
+		if (count($this->users)) {
+			return ' id="tx-cabagloginas-menu"';
+		} else {
+			return '';
+		}
 	}
 
 	function getHREF($userid) {
@@ -86,8 +115,8 @@ class tx_cabagloginas implements backend_toolbarItem {
 		return $content;
 	}
 
-	function getLoginAsIconInTable($userid) {
-		$label = '<img src="sysext/t3skin/icons/gfx/su_back.gif" width="16" height="16" alt="" title="" />';
+	function getLoginAsIconInTable($userid, $title = '') {
+		$label = '<img'.t3lib_iconWorks::skinImg($this->backPath, 'gfx/su_back.gif', 'width="16" height="16"').' title="'.$title.'" alt="'.$title.'" />';
 		$link = $this->getHREF($userid);
 		$content = '<a class="toolbar-item" href="'.$link.'" target="_blank">'.$label.'</a>';
 		return $content;

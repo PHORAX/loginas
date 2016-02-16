@@ -1,0 +1,2 @@
+# cat=basic/enable/10; type=String; label=Displayed text. Default: [#pid# / #uid#] #username# (#email#)
+defLinkText = [#pid# / #uid#] #username# (#email#)

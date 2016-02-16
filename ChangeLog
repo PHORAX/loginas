@@ -1,3 +1,7 @@
+2010-03-19 Dimitri König  <dk@cabag.ch>
+	* version 0.0.7
+	* better toolbar menu allowing multiple fe_user accounts with the same email address to be shown 
+
 2010-03-16 Dimitri König  <dk@cabag.ch>
 	* version 0.0.6
 	* small css change 

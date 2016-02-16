@@ -2,3 +2,37 @@
 	padding-left: 7px;
 	padding-right: 7px;
 }
+
+#tx-cabagloginas-menu ul {
+	position: absolute;
+	list-style: none;
+	padding: 2px 0px 0px;
+	margin: 0px;
+	background-color: #f9f9f9;
+	border: 1px solid #abb2bc;
+	border-top: none;
+}
+
+#tx-cabagloginas-menu li {
+	padding-top: 2px;
+	text-align: left;
+	float: none;
+	vertical-align: middle;
+	height: 19px;
+	white-space: nowrap;
+}
+
+#tx-cabagloginas-menu li img {
+	float: left;
+	padding-right: 3px;
+}
+
+#tx-cabagloginas-menu li a {
+	text-decoration: none;
+	line-height: 12px;
+	vertical-align: middle;
+	display: block;
+	padding-bottom: 2px;
+	padding-left: 3px;
+	font-size: 11px;
+}
