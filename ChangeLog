@@ -1,15 +1,7 @@
-2015-12-21 Tizian Schmidlin <st@cabag.ch>
-	* version 1.2.3
-	* fixed the styling of the switch link in the list module
+2016-05-04 Tizian Schmidlin <st@cabag.ch>
+	* version 2.0.0
+	* merged https://github.com/visol/ext-cabag_loginas and https://github.com/spoonerWeb/ext-cabag_loginas
 
-2015-04-22 Nils Blattner <nb@cabag.ch>
-	* version 1.2.2
-	* [BUG] changed it so the session value for logged in users is set and saved directly
-
-2015-01-19 Lavinia Negru <ln@cabag.ch>
-	* version 1.2.1
-	* [6.2] modified tx_cabagloginas.6.2 to modifie db select for user uid
-	
 2014-09-30 Nils Blattner <nb@cabag.ch>
 	* version 1.2.0
 	* [6.2] fixed compatibility issues with TYPO3 6.2
