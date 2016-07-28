@@ -134,14 +134,16 @@ class ToolbarItemHook implements \TYPO3\CMS\Backend\Toolbar\ToolbarItemInterface
 	}
 
 	public function getLoginAsIconInTable($user, $title = '') {
-		if(version_compare('7.6.0', TYPO3_version, '>=')) {
+		$additionalClass = '';
+		if(version_compare(TYPO3_version, '7.6.0', '>=')) {
 			$iconFactory = GeneralUtility::makeInstance('TYPO3\CMS\Core\Imaging\IconFactory');
-			$switchUserIcon = $iconFactory->getIcon('actions-system-backend-user-switch', Icon::SIZE_SMALL)->render() ;
+			$switchUserIcon = $iconFactory->getIcon('actions-system-backend-user-switch', \TYPO3\CMS\Core\Imaging\Icon::SIZE_SMALL)->render();
+			$additionalClass = '  class="btn btn-default"';
 		} else {
 			$switchUserIcon = \TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIcon('actions-system-backend-user-emulate', array('style' => 'background-position: 0 10px;'));
 		}
 		$link = $this->getHREF($user);
-		$content = '<a title="' . $title . '" href="' . $link . '" target="_blank">' . $switchUserIcon . '</a>';
+		$content = '<a title="' . $title . '" href="' . $link . '" target="_blank"' . $additionalClass . '>' . $switchUserIcon . '</a>';
 		return $content;
 	}
 
