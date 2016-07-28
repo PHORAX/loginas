@@ -33,8 +33,14 @@ class RecordListHook implements \TYPO3\CMS\Recordlist\RecordList\RecordListHookI
 		if ($table == 'fe_users') {
 			$tempcells = array();
 			foreach ($cells as $key => $value) {
-				if (strpos($value, 'clear.gif') === FALSE) {
+				if (!is_array($value) && strpos($value, 'clear.gif') === FALSE) {
 					$tempcells[$key] = $value;
+				} elseif(is_array($value)) {
+					foreach($value as $k => $v) {
+						if(strpos($v, 'clear.gif') === FALSE) {
+							$tempcells[$key][$v] = $v;
+						}
+					}
 				}
 			}
 			$cells = $tempcells;

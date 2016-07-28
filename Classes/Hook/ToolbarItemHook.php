@@ -15,8 +15,9 @@ namespace Cabag\CabagLoginas\Hook;
  */
 
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class ToolbarItemHook implements \TYPO3\CMS\Backend\Toolbar\ToolbarItemHookInterface {
+class ToolbarItemHook implements \TYPO3\CMS\Backend\Toolbar\ToolbarItemInterface {
 	protected $backendReference;
 
 	protected $users = array();
@@ -88,7 +89,7 @@ class ToolbarItemHook implements \TYPO3\CMS\Backend\Toolbar\ToolbarItemHookInter
 		return $defLinkText;
 	}
 
-	public function getAdditionalAttributes() {
+	public function _getAdditionalAttributes() {
 		if (count($this->users)) {
 			return ' id="tx-cabagloginas-menu"';
 		} else {
@@ -133,7 +134,12 @@ class ToolbarItemHook implements \TYPO3\CMS\Backend\Toolbar\ToolbarItemHookInter
 	}
 
 	public function getLoginAsIconInTable($user, $title = '') {
-		$switchUserIcon = \TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIcon('actions-system-backend-user-emulate', array('style' => 'background-position: 0 10px;'));
+		if(version_compare('7.6.0', TYPO3_version, '>=')) {
+			$iconFactory = GeneralUtility::makeInstance('TYPO3\CMS\Core\Imaging\IconFactory');
+			$switchUserIcon = $iconFactory->getIcon('actions-system-backend-user-switch', Icon::SIZE_SMALL)->render() ;
+		} else {
+			$switchUserIcon = \TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIcon('actions-system-backend-user-emulate', array('style' => 'background-position: 0 10px;'));
+		}
 		$link = $this->getHREF($user);
 		$content = '<a title="' . $title . '" href="' . $link . '" target="_blank">' . $switchUserIcon . '</a>';
 		return $content;
@@ -182,4 +188,63 @@ class ToolbarItemHook implements \TYPO3\CMS\Backend\Toolbar\ToolbarItemHookInter
 	protected function getRedirectUrl($pageId) {
 		return rawurlencode(\TYPO3\CMS\Backend\Utility\BackendUtility::getViewDomain($pageId) . '/index.php?id=' . $pageId);
 	}
+	
+	/**
+     * Render "item" part of this toolbar
+     *
+     * @return string Toolbar item HTML
+     */
+    public function getItem() {
+    	return $this->render();
+    }
+
+    /**
+     * TRUE if this toolbar item has a collapsible drop down
+     *
+     * @return bool
+     */
+    public function hasDropDown() {
+    	return false;
+    }
+
+    /**
+     * Render "drop down" part of this toolbar
+     *
+     * @return string Drop down HTML
+     */
+    public function getDropDown() {
+    	return '';
+    }
+
+    /**
+     * Returns an array with additional attributes added to containing <li> tag of the item.
+     *
+     * Typical usages are additional css classes and data-* attributes, classes may be merged
+     * with other classes needed by the framework. Do NOT set an id attribute here.
+     *
+     * array(
+     *     'class' => 'my-class',
+     *     'data-foo' => '42',
+     * )
+     *
+     * @return array List item HTML attributes
+     */
+    public function getAdditionalAttributes() {
+    	return array(
+    		'id' => 'tx-cabagloginas-menu'
+		);
+    }
+
+    /**
+     * Returns an integer between 0 and 100 to determine
+     * the position of this item relative to others
+     *
+     * By default, extensions should return 50 to be sorted between main core
+     * items and other items that should be on the very right.
+     *
+     * @return int 0 .. 100
+     */
+    public function getIndex() {
+    	return 50;
+    }
 }

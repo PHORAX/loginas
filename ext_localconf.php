@@ -30,3 +30,5 @@ $TYPO3_CONF_VARS['SVCONF']['auth']['setup']['FE_alwaysFetchUser'] = 1;
 		'className' => 'Cabag\CabagLoginas\Typo3\Service\LoginAsService',
 	)
 );
+
+//$GLOBALS['TYPO3_CONF_VARS']['BE']['toolbarItems']['cabag_loginas'] = \Cabag\CabagLoginas\Hook\ToolbarItemHook::class;

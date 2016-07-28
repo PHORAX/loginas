@@ -6,5 +6,5 @@ if (!defined('TYPO3_MODE')) {
 
 if (TYPO3_MODE == 'BE') {
 	// register the class as toolbar item
-	$GLOBALS['TYPO3backend']->addToolbarItem('cabag_loginas', 'Cabag\CabagLoginas\Hook\ToolbarItemHook');
+	$GLOBALS['TYPO3_CONF_VARS']['BE']['toolbarItems']['cabag_loginas'] = \Cabag\CabagLoginas\Hook\ToolbarItemHook::class;
 }

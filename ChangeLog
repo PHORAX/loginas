@@ -1,3 +1,8 @@
+2016-07-26 Tizian Schmidlin <st@cabag.ch>
+	* version 2.0.1
+	* fixed all issues with 7.6
+	* The icon is still ugly, though
+
 2016-05-04 Tizian Schmidlin <st@cabag.ch>
 	* version 2.0.0
 	* merged https://github.com/visol/ext-cabag_loginas and https://github.com/spoonerWeb/ext-cabag_loginas
