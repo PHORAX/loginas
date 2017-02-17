@@ -9,6 +9,9 @@
 			<trans-unit id="sys_domain.tx_cabagfileexplorer_redirect_to" xml:space="preserve">
 				<source>Redirect to this url path after the login:</source>
 			</trans-unit>
+			<trans-unit id="cabag_loginas.switchToFeuser" xml:space="preserve">
+				<source>Login as user</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

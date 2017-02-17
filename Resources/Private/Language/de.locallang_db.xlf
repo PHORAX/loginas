@@ -11,6 +11,10 @@
 				<source>Redirect to this url path after the login:</source>
 				<target>Nach dem Login auf diesen Pfad weiterleiten:</target>
 			</trans-unit>
+			<trans-unit id="cabag_loginas.switchToFeuser" xml:space="preserve">
+				<source>Login as user</source>
+				<target>Mit Benutzer anmelden</target>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

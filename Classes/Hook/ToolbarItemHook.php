@@ -135,6 +135,9 @@ class ToolbarItemHook implements \TYPO3\CMS\Backend\Toolbar\ToolbarItemInterface
 
 	public function getLoginAsIconInTable($user, $title = '') {
 		$additionalClass = '';
+		if(trim($title) === '') {
+			$title = $GLOBALS['LANG']->getLL('cabag_loginas.switchToFeuser', TRUE);
+		}
 		if(version_compare(TYPO3_version, '7.6.0', '>=')) {
 			$iconFactory = GeneralUtility::makeInstance('TYPO3\CMS\Core\Imaging\IconFactory');
 			$switchUserIcon = $iconFactory->getIcon('actions-system-backend-user-switch', \TYPO3\CMS\Core\Imaging\Icon::SIZE_SMALL)->render();
