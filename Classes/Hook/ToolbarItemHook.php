@@ -126,9 +126,12 @@ class ToolbarItemHook implements \TYPO3\CMS\Backend\Toolbar\ToolbarItemInterface
 	}
 
 	public function getLink($data) {
-		$label = $data['label'] . ' ' . $data['row']['username'];
-		$link = $this->getHREF($data['row']);
-		$content = '<a href="' . $link . '" target="_blank" style="text-decoration:underline;">' . $label . '</a>';
+		$isUnsavedNewUser = (strpos($data['row']['uid'], 'NEW') === 0);
+		$label = $content = $data['label'] . ' ' . $data['row']['username'];
+		if (!$isUnsavedNewUser) {
+			$link = $this->getHREF($data['row']);
+			$content = '<a href="' . $link . '" target="_blank" style="text-decoration:underline;">' . $label . '</a>';
+		}
 
 		return $content;
 	}
