@@ -1,3 +1,7 @@
+2017-11-27 Xiaoling Peng <xp@cabag.ch>
+	* version 2.0.5
+	* fixed Classes/Hook/RecordListHook.php: makeControl to remove foreach ($cells as $key => $value) - #43266
+
 2017-11-23 Surena Golijani <sg@cabag.ch>
 	* version 2.0.4
 	* edited Classes/Hook/ToolbarItemHook.php getLink(): check if form of an unsaved new user is displayed to prevent error: Unknown column 'NEW5a168f878d66b716571009' in 'where clause', working on issue #43251
