@@ -1,5 +1,5 @@
 <?php
-namespace Cabag\CabagLoginas\Typo3\Service;
+namespace Cabag\CabagLoginas\Service;
 
 /**
  * This file is part of the TYPO3 CMS project.
@@ -14,13 +14,15 @@ namespace Cabag\CabagLoginas\Typo3\Service;
  * The TYPO3 project - inspiring people to share!
  */
 
-class LoginAsService extends \TYPO3\CMS\Sv\AbstractAuthenticationService {
+class LoginAsService extends \TYPO3\CMS\Sv\AuthenticationService {
 
 	protected $rowdata;
 
 	public function getUser() {
+        
 		$row = FALSE;
 		$cabag_loginas_data = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('tx_cabagloginas');
+        
 		if (isset($cabag_loginas_data['verification'])) {
 			$ses_id = $_COOKIE['be_typo_user'];
 			$verificationHash = $cabag_loginas_data['verification'];

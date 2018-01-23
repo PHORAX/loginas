@@ -1,4 +1,5 @@
 <?php
+
 namespace Cabag\CabagLoginas\Hook;
 
 /**
@@ -24,36 +25,37 @@ namespace Cabag\CabagLoginas\Hook;
  */
 class PostUserLookupHook {
 
-	/**
-	 * Looks for any redirection after login.
-	 *
-	 * @param array $params
-	 * @param \TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication $pObj
-	 *
-	 * @return void
-	 */
-	public function postUserLookUp($params, &$pObj) {
-		if (TYPO3_MODE == 'FE') {
-			if (!empty($GLOBALS['TSFE']->fe_user->user['uid'])) {
-				$cabagLoginasData = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('Cabag\CabagLoginas\Hook\ToolbarItemHook');
-				if (!empty($cabagLoginasData['redirecturl'])) {
-					$partsArray = parse_url(rawurldecode($cabagLoginasData['redirecturl']));
-					if (strpos(\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL'), $partsArray['scheme'] . '://' . $partsArray['host'] . '/') === FALSE) {
-						$partsArray['query'] .= '&FE_SESSION_KEY=' . rawurlencode(
-							$pObj->id . '-' . md5($pObj->id . '/' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'])
-						);
-					}
-					$redirectUrl = (isset($partsArray['scheme']) ? $partsArray['scheme'] . '://' : '') .
-						(isset($partsArray['user']) ? $partsArray['user'] .
-							(isset($partsArray['pass']) ? ':' . $partsArray['pass'] : '') . '@' : '') .
-						(isset($partsArray['host']) ? $partsArray['host'] : '') .
-						(isset($partsArray['port']) ? ':' . $partsArray['port'] : '') .
-						(isset($partsArray['path']) ? $partsArray['path'] : '') .
-						(isset($partsArray['query']) ? '?' . $partsArray['query'] : '') .
-						(isset($partsArray['fragment']) ? '#' . $partsArray['fragment'] : '');
-					\TYPO3\CMS\Core\Utility\HttpUtility::redirect($redirectUrl);
-				}
-			}
-		}
-	}
+    /**
+     * Looks for any redirection after login.
+     *
+     * @param array $params
+     * @param \TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication $pObj
+     *
+     * @return void
+     */
+    public function postUserLookUp($params, &$pObj) {
+        if (TYPO3_MODE == 'FE') {
+            if (!empty($GLOBALS['TSFE']->fe_user->user['uid'])) {
+                $cabagLoginasData = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('Cabag\CabagLoginas\Hook\ToolbarItemHook');
+                if (!empty($cabagLoginasData['redirecturl'])) {
+                    $partsArray = parse_url(rawurldecode($cabagLoginasData['redirecturl']));
+                    if (strpos(\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL'), $partsArray['scheme'] . '://' . $partsArray['host'] . '/') === FALSE) {
+                        $partsArray['query'] .= '&FE_SESSION_KEY=' . rawurlencode(
+                                $pObj->id . '-' . md5($pObj->id . '/' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'])
+                        );
+                    }
+                    $redirectUrl = (isset($partsArray['scheme']) ? $partsArray['scheme'] . '://' : '') .                                           
+                        (isset($partsArray['user']) ? $partsArray['user'] .
+                        (isset($partsArray['pass']) ? ':' . $partsArray['pass'] : '') . '@' : '') .
+                        (isset($partsArray['host']) ? $partsArray['host'] : '') .
+                        (isset($partsArray['port']) ? ':' . $partsArray['port'] : '') .
+                        (isset($partsArray['path']) ? $partsArray['path'] : '') .
+                        (isset($partsArray['query']) ? '?' . $partsArray['query'] : '') .
+                        (isset($partsArray['fragment']) ? '#' . $partsArray['fragment'] : '');
+                    \TYPO3\CMS\Core\Utility\HttpUtility::redirect($redirectUrl);
+                }
+            }
+        }
+    }
+
 }

@@ -1,3 +1,10 @@
+2018-01-23 Christopher Schnell <cs@cabag.ch>
+	* version 2.1.0 of cabag_loginas
+	* Starting to move towards T3V9
+    * Moved TCA Overrides to their correct folders
+    * removed old comments and cleaned up
+    * dropped 6.2 compatibility
+
 2017-11-27 Xiaoling Peng <xp@cabag.ch>
 	* version 2.0.5
 	* fixed Classes/Hook/RecordListHook.php: makeControl to remove foreach ($cells as $key => $value) - #43266

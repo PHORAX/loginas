@@ -1,11 +1,19 @@
 {
-	"name": "cabag/cabag-loginas",
-	"type": "typo3-cms-extension",
-	"description": "CAB Login As",
-	"homepage": "https://github.com/visol/ext-cabag_loginas",
-	"license": ["GPL-2.0+"],
-	"version": "2.0.0",
-	"require": {
-		"typo3/cms-core": ">=6.2.0,<8.0"
-	}
+  "name": "cabag/ext-cabag-loginas",
+  "description": "CAB Login As",
+  "version": "2.1.0",
+  "type": "typo3-cms-extension",
+  "license": "MIT",
+  
+  "replace": {
+    "cabag_googlesearch": "self.version"
+  },
+  "require": {
+    "typo3/cms-core": ">=7.6 | ~8.7"
+  },
+  "autoload": {
+    "psr-4": {
+      "Cabag\\CabagLoginas\\": "Classes/"
+    }
+  }
 }
