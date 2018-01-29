@@ -1,12 +1,12 @@
 {
   "name": "cabag/ext-cabag-loginas",
   "description": "CAB Login As",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "type": "typo3-cms-extension",
   "license": "MIT",
   
   "replace": {
-    "cabag_googlesearch": "self.version"
+    "cabag_loginas": "self.version"
   },
   "require": {
     "typo3/cms-core": ">=7.6 | ~8.7"
