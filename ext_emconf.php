@@ -11,27 +11,26 @@
  ***************************************************************/
 
 $EM_CONF[$_EXTKEY] = array(
-	'title' => 'CAB Login As',
-	'description' => 'Within the backend you have a button in the fe_user table and in the upper right corner to quickly login as this fe user in frontend.',
-	'category' => 'be',
-	'version' => '2.1.1',
-	'state' => 'stable',
-	'uploadfolder' => TRUE,
-	'createDirs' => '',
-	'clearcacheonload' => TRUE,
-	'author' => 'Dimitri Koenig, Tizian Schmidlin, Lorenz Ulrich, Thomas Löffler',
-	'author_email' => 'dk@cabag.ch, st@cabag.ch, info@visol.ch, loeffler@spooner-web.de',
-	'author_company' => '',
-	'constraints' =>
-		array(
-			'depends' =>
-				array(
-					'typo3' => '6.2.0-7.99.99',
-				),
-			'conflicts' =>
-				array(),
-			'suggests' =>
-				array(),
-		),
+    'title' => 'CAB Login As',
+    'description' => 'Within the backend you have a button in the fe_user table and in the upper right corner to quickly login as this fe user in frontend.',
+    'category' => 'be',
+    'version' => '2.1.2',
+    'state' => 'stable',
+    'uploadfolder' => true,
+    'createDirs' => '',
+    'clearcacheonload' => true,
+    'author' => 'Dimitri Koenig, Tizian Schmidlin, Lorenz Ulrich, Thomas Löffler',
+    'author_email' => 'dk@cabag.ch, st@cabag.ch, info@visol.ch, loeffler@spooner-web.de',
+    'author_company' => '',
+    'constraints' =>
+        array(
+            'depends' =>
+                array(
+                    'typo3' => '7.6.0-8.7.99',
+                ),
+            'conflicts' =>
+                array(),
+            'suggests' =>
+                array(),
+        ),
 );
-

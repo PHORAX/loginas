@@ -14,17 +14,19 @@ namespace Cabag\CabagLoginas\Hook;
  *
  * The TYPO3 project - inspiring people to share!
  */
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Utility\MathUtility;
 
-class ToolbarItemHook implements \TYPO3\CMS\Backend\Toolbar\ToolbarItemInterface {
-
+class ToolbarItemHook implements \TYPO3\CMS\Backend\Toolbar\ToolbarItemInterface
+{
     protected $backendReference;
     protected $users = array();
     protected $EXTKEY = 'cabag_loginas';
 
-    public function __construct(\TYPO3\CMS\Backend\Controller\BackendController &$backendReference = NULL) {
+    public function __construct(\TYPO3\CMS\Backend\Controller\BackendController &$backendReference = null)
+    {
         $GLOBALS['LANG']->includeLLFile('EXT:cabag_loginas/Resources/Private/Language/locallang_db.xlf');
         $this->backendReference = $backendReference;
 
@@ -40,29 +42,35 @@ class ToolbarItemHook implements \TYPO3\CMS\Backend\Toolbar\ToolbarItemInterface
                     ->execute()
                     ->fetchAll();
         } else {
-
             $this->users = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-                '*', 'fe_users', 'email = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($email, 'fe_users') . ' AND disable = 0 AND deleted = 0', '', '', '15'
+                '*',
+                'fe_users',
+                'email = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($email, 'fe_users') . ' AND disable = 0 AND deleted = 0',
+                '',
+                '',
+                '15'
             );
         }
     }
 
-    public function checkAccess() {
+    public function checkAccess()
+    {
         $conf = $GLOBALS['BE_USER']->getTSConfig('backendToolbarItem.tx_cabagloginas.disabled');
 
-        return ($conf['value'] == 1 ? FALSE : TRUE);
+        return ($conf['value'] == 1 ? false : true);
     }
 
-    public function render() {
+    public function render()
+    {
         $this->backendReference->addCssFile('cabag_loginas', ExtensionManagementUtility::extRelPath($this->EXTKEY) . 'Resources/Public/Stylesheets/cabag_loginas.css');
         $this->backendReference->addJavascriptFile(ExtensionManagementUtility::extRelPath($this->EXTKEY) . 'Resources/Public/JavaScripts/cabag_loginas.js');
 
         $toolbarMenu = array();
 
-        $title = $GLOBALS['LANG']->getLL('fe_users.tx_cabagloginas_loginas', TRUE);
+        $title = $GLOBALS['LANG']->getLL('fe_users.tx_cabagloginas_loginas', true);
         $ext_conf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['cabag_loginas']);
         $defLinkText = trim($ext_conf['defLinkText']);
-        if (empty($defLinkText) || strstr($defLinkText, '#') === FALSE || strstr($defLinkText, 'password') !== FALSE) {
+        if (empty($defLinkText) || strstr($defLinkText, '#') === false || strstr($defLinkText, 'password') !== false) {
             $defLinkText = '[#pid# / #uid#] #username# (#email#)';
         }
 
@@ -88,7 +96,8 @@ class ToolbarItemHook implements \TYPO3\CMS\Backend\Toolbar\ToolbarItemInterface
         }
     }
 
-    public function formatLinkText($user, $defLinkText) {
+    public function formatLinkText($user, $defLinkText)
+    {
         foreach ($user as $key => $value) {
             $defLinkText = str_replace('#' . $key . '#', $value, $defLinkText);
         }
@@ -96,7 +105,8 @@ class ToolbarItemHook implements \TYPO3\CMS\Backend\Toolbar\ToolbarItemInterface
         return $defLinkText;
     }
 
-    public function _getAdditionalAttributes() {
+    public function _getAdditionalAttributes()
+    {
         if (count($this->users)) {
             return ' id="tx-cabagloginas-menu"';
         } else {
@@ -104,7 +114,11 @@ class ToolbarItemHook implements \TYPO3\CMS\Backend\Toolbar\ToolbarItemInterface
         }
     }
 
-    public function getHREF($user) {
+    public function getHREF($user)
+    {
+        if (!MathUtility::canBeInterpretedAsInteger($user['uid'])) {
+            return '#';
+        }
         $parameterArray = array();
         $parameterArray['userid'] = (string) $user['uid'];
         $parameterArray['timeout'] = (string) $timeout = time() + 3600;
@@ -114,7 +128,9 @@ class ToolbarItemHook implements \TYPO3\CMS\Backend\Toolbar\ToolbarItemInterface
         } else {
             // Check group settings for any redirect page
             $userGroup = $GLOBALS['TYPO3_DB']->exec_SELECTgetSingleRow(
-                'fe_groups.felogin_redirectPid', 'fe_users, fe_groups', 'fe_groups.felogin_redirectPid != "" AND fe_groups.uid IN (fe_users.usergroup) AND fe_users.uid = ' . $user['uid']
+                'fe_groups.felogin_redirectPid',
+                'fe_users, fe_groups',
+                'fe_groups.felogin_redirectPid != "" AND fe_groups.uid IN (fe_users.usergroup) AND fe_users.uid = ' . $user['uid']
             );
             if (is_array($userGroup) && !empty($userGroup['felogin_redirectPid'])) {
                 $parameterArray['redirecturl'] = $this->getRedirectUrl($userGroup['felogin_redirectPid']);
@@ -130,7 +146,8 @@ class ToolbarItemHook implements \TYPO3\CMS\Backend\Toolbar\ToolbarItemInterface
         return $link;
     }
 
-    public function getLink($data) {
+    public function getLink($data)
+    {
         $isUnsavedNewUser = (strpos($data['row']['uid'], 'NEW') === 0);
         $label = $content = $data['label'] . ' ' . $data['row']['username'];
         if (!$isUnsavedNewUser) {
@@ -141,10 +158,11 @@ class ToolbarItemHook implements \TYPO3\CMS\Backend\Toolbar\ToolbarItemInterface
         return $content;
     }
 
-    public function getLoginAsIconInTable($user, $title = '') {
+    public function getLoginAsIconInTable($user, $title = '')
+    {
         $additionalClass = '';
         if (trim($title) === '') {
-            $title = $GLOBALS['LANG']->getLL('cabag_loginas.switchToFeuser', TRUE);
+            $title = $GLOBALS['LANG']->getLL('cabag_loginas.switchToFeuser', true);
         }
         if (version_compare(TYPO3_version, '7.6.0', '>=')) {
             $iconFactory = GeneralUtility::makeInstance('TYPO3\CMS\Core\Imaging\IconFactory');
@@ -165,7 +183,8 @@ class ToolbarItemHook implements \TYPO3\CMS\Backend\Toolbar\ToolbarItemInterface
      *
      * @return string '../' if nothing was found, the link in the form of http://www.domain.tld/link/page.html otherwise.
      */
-    public function getRedirectForCurrentDomain($pid) {
+    public function getRedirectForCurrentDomain($pid)
+    {
         $extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['cabag_loginas']);
         $domain = \TYPO3\CMS\Backend\Utility\BackendUtility::getViewDomain($pid);
         $domainArray = parse_url($domain);
@@ -175,7 +194,12 @@ class ToolbarItemHook implements \TYPO3\CMS\Backend\Toolbar\ToolbarItemInterface
         }
 
         $rowArray = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-            'domainName, tx_cabagfileexplorer_redirect_to', 'sys_domain', 'hidden = 0 AND domainName = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($domainArray['host'], 'sys_domain'), '', '', 1
+            'domainName, tx_cabagfileexplorer_redirect_to',
+            'sys_domain',
+            'hidden = 0 AND domainName = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($domainArray['host'], 'sys_domain'),
+            '',
+            '',
+            1
         );
 
         if (count($rowArray) === 0 || (trim($rowArray[0]['tx_cabagfileexplorer_redirect_to'])) === '') {
@@ -193,7 +217,8 @@ class ToolbarItemHook implements \TYPO3\CMS\Backend\Toolbar\ToolbarItemInterface
      *
      * @return string
      */
-    protected function getRedirectUrl($pageId) {
+    protected function getRedirectUrl($pageId)
+    {
         return rawurlencode(\TYPO3\CMS\Backend\Utility\BackendUtility::getViewDomain($pageId) . '/index.php?id=' . $pageId);
     }
 
@@ -202,7 +227,8 @@ class ToolbarItemHook implements \TYPO3\CMS\Backend\Toolbar\ToolbarItemInterface
      *
      * @return string Toolbar item HTML
      */
-    public function getItem() {
+    public function getItem()
+    {
         return $this->render();
     }
 
@@ -211,7 +237,8 @@ class ToolbarItemHook implements \TYPO3\CMS\Backend\Toolbar\ToolbarItemInterface
      *
      * @return bool
      */
-    public function hasDropDown() {
+    public function hasDropDown()
+    {
         return false;
     }
 
@@ -220,7 +247,8 @@ class ToolbarItemHook implements \TYPO3\CMS\Backend\Toolbar\ToolbarItemInterface
      *
      * @return string Drop down HTML
      */
-    public function getDropDown() {
+    public function getDropDown()
+    {
         return '';
     }
 
@@ -237,7 +265,8 @@ class ToolbarItemHook implements \TYPO3\CMS\Backend\Toolbar\ToolbarItemInterface
      *
      * @return array List item HTML attributes
      */
-    public function getAdditionalAttributes() {
+    public function getAdditionalAttributes()
+    {
         return array(
             'id' => 'tx-cabagloginas-menu'
         );
@@ -252,8 +281,8 @@ class ToolbarItemHook implements \TYPO3\CMS\Backend\Toolbar\ToolbarItemInterface
      *
      * @return int 0 .. 100
      */
-    public function getIndex() {
+    public function getIndex()
+    {
         return 50;
     }
-
 }

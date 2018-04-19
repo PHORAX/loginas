@@ -1,3 +1,7 @@
+2018-04-19 Tizian Schmidlin <st@cabag.ch>
+	* version 2.1.2
+	* check if user id is set before returning a href
+
 2018-01-29 Christopher Schnell <cs@cabag.ch>
 	* version 2.1.1 of cabag_loginas
     * Fixed Bug in composer.json
