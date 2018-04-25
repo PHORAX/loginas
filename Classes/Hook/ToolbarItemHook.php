@@ -38,7 +38,6 @@ class ToolbarItemHook implements \TYPO3\CMS\Backend\Toolbar\ToolbarItemInterface
             $this->users = $queryBuilder->select('*')
                     ->from('fe_users')
                     ->where($queryBuilder->expr()->eq('email', $queryBuilder->createNamedParameter($email, \PDO::PARAM_INT)))
-                    ->orderBy('sorting')
                     ->execute()
                     ->fetchAll();
         } else {

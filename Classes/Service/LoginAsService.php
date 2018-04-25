@@ -14,45 +14,44 @@ namespace Cabag\CabagLoginas\Service;
  * The TYPO3 project - inspiring people to share!
  */
 
-class LoginAsService extends \TYPO3\CMS\Sv\AuthenticationService {
+class LoginAsService extends \TYPO3\CMS\Sv\AuthenticationService
+{
+    protected $rowdata;
 
-	protected $rowdata;
+    public function getUser()
+    {
+        $row = false;
+        $cabag_loginas_data = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('tx_cabagloginas');
 
-	public function getUser() {
-        
-		$row = FALSE;
-		$cabag_loginas_data = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('tx_cabagloginas');
-        
-		if (isset($cabag_loginas_data['verification'])) {
-			$ses_id = $_COOKIE['be_typo_user'];
-			$verificationHash = $cabag_loginas_data['verification'];
-			unset($cabag_loginas_data['verification']);
-			if (md5($GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'] . $ses_id . serialize($cabag_loginas_data)) === $verificationHash &&
-				$cabag_loginas_data['timeout'] > time()) {
+        if (isset($cabag_loginas_data['verification'])) {
+            $ses_id = $_COOKIE['be_typo_user'];
+            $verificationHash = $cabag_loginas_data['verification'];
+            unset($cabag_loginas_data['verification']);
+            if (md5($GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'] . $ses_id . serialize($cabag_loginas_data)) === $verificationHash &&
+                $cabag_loginas_data['timeout'] > time()) {
+                $user = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+                    '*',
+                    'fe_users',
+                    'uid = ' . intval($cabag_loginas_data['userid'])
+                );
+                if ($user[0]) {
+                    $row = $this->rowdata = $user[0];
+                    $GLOBALS["TSFE"]->fe_user->setKey('ses', 'tx_cabagloginas', true);
+                }
+            }
+        }
 
-				$user = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-					'*',
-					'fe_users',
-					'uid = ' . intval($cabag_loginas_data['userid'])
-				);
-				if ($user[0]) {
-					$row = $this->rowdata = $user[0];
-					$GLOBALS["TSFE"]->fe_user->setKey('ses', 'tx_cabagloginas', TRUE);
-				}
+        return $row;
+    }
 
-			}
-		}
+    public function authUser(array $user)
+    {
+        $OK = 100;
 
-		return $row;
-	}
+        if ($this->rowdata['uid'] == $user['uid']) {
+            $OK = 200;
+        }
 
-	public function authUser($user) {
-		$OK = 100;
-
-		if ($this->rowdata['uid'] == $user['uid']) {
-			$OK = 200;
-		}
-
-		return $OK;
-	}
+        return $OK;
+    }
 }
