@@ -1,5 +1,11 @@
 <?php
+
 namespace Cabag\CabagLoginas\Service;
+
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\Restriction\HiddenRestriction;
+use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 
 /**
  * This file is part of the TYPO3 CMS project.
@@ -13,9 +19,9 @@ namespace Cabag\CabagLoginas\Service;
  *
  * The TYPO3 project - inspiring people to share!
  */
-
 class LoginAsService extends \TYPO3\CMS\Sv\AuthenticationService
 {
+
     protected $rowdata;
 
     public function getUser()
@@ -29,14 +35,30 @@ class LoginAsService extends \TYPO3\CMS\Sv\AuthenticationService
             unset($cabag_loginas_data['verification']);
             if (md5($GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'] . $ses_id . serialize($cabag_loginas_data)) === $verificationHash &&
                 $cabag_loginas_data['timeout'] > time()) {
-                $user = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-                    '*',
-                    'fe_users',
-                    'uid = ' . intval($cabag_loginas_data['userid'])
-                );
+                if (class_exists(ConnectionPool::class)) {
+                    $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('fe_users');
+                    $queryBuilder->getRestrictions()
+                        ->removeAll()
+                        ->add(GeneralUtility::makeInstance(DeletedRestriction::class))
+                        ->add(GeneralUtility::makeInstance(HiddenRestriction::class));
+                    $user = $queryBuilder
+                        ->select('*')
+                        ->from('fe_users')
+                        ->where(
+                            $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($cabag_loginas_data['userid'], \PDO::PARAM_INT))
+                        )
+                        ->execute()
+                        ->fetchAll();
+                } else {
+                    $user = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+                        '*', 'fe_users', 'uid = ' . intval($cabag_loginas_data['userid'])
+                    );
+                }
                 if ($user[0]) {
                     $row = $this->rowdata = $user[0];
-                    $GLOBALS["TSFE"]->fe_user->setKey('ses', 'tx_cabagloginas', true);
+                    if (is_object($GLOBALS["TSFE"]->fe_user)) {
+                        $GLOBALS["TSFE"]->fe_user->setKey('ses', 'tx_cabagloginas', true);
+                    }
                 }
             }
         }
@@ -44,7 +66,7 @@ class LoginAsService extends \TYPO3\CMS\Sv\AuthenticationService
         return $row;
     }
 
-    public function authUser(array $user)
+    public function authUser(array $user): int
     {
         $OK = 100;
 
@@ -54,4 +76,5 @@ class LoginAsService extends \TYPO3\CMS\Sv\AuthenticationService
 
         return $OK;
     }
+
 }

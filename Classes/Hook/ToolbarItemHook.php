@@ -15,12 +15,15 @@ namespace Cabag\CabagLoginas\Hook;
  * The TYPO3 project - inspiring people to share!
  */
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\Restriction\HiddenRestriction;
+use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 
 class ToolbarItemHook implements \TYPO3\CMS\Backend\Toolbar\ToolbarItemInterface
 {
+
     protected $backendReference;
     protected $users = array();
     protected $EXTKEY = 'cabag_loginas';
@@ -36,18 +39,13 @@ class ToolbarItemHook implements \TYPO3\CMS\Backend\Toolbar\ToolbarItemInterface
             $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
                 ->getQueryBuilderForTable('fe_users');
             $this->users = $queryBuilder->select('*')
-                    ->from('fe_users')
-                    ->where($queryBuilder->expr()->eq('email', $queryBuilder->createNamedParameter($email, \PDO::PARAM_INT)))
-                    ->execute()
-                    ->fetchAll();
+                ->from('fe_users')
+                ->where($queryBuilder->expr()->eq('email', $queryBuilder->createNamedParameter($email, \PDO::PARAM_INT)))
+                ->execute()
+                ->fetchAll();
         } else {
             $this->users = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-                '*',
-                'fe_users',
-                'email = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($email, 'fe_users') . ' AND disable = 0 AND deleted = 0',
-                '',
-                '',
-                '15'
+                '*', 'fe_users', 'email = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($email, 'fe_users') . ' AND disable = 0 AND deleted = 0', '', '', '15'
             );
         }
     }
@@ -126,11 +124,17 @@ class ToolbarItemHook implements \TYPO3\CMS\Backend\Toolbar\ToolbarItemInterface
             $parameterArray['redirecturl'] = $this->getRedirectUrl($user['felogin_redirectPid']);
         } else {
             // Check group settings for any redirect page
-            $userGroup = $GLOBALS['TYPO3_DB']->exec_SELECTgetSingleRow(
-                'fe_groups.felogin_redirectPid',
-                'fe_users, fe_groups',
-                'fe_groups.felogin_redirectPid != "" AND fe_groups.uid IN (fe_users.usergroup) AND fe_users.uid = ' . $user['uid']
-            );
+            if (class_exists(ConnectionPool::class)) {
+                $connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
+                $connection = $connectionPool->getConnectionForTable('fe_users');
+                $sql = "SELECT fe_groups.felogin_redirectPid FROM fe_users, fe_groups WHERE fe_groups.felogin_redirectPid != \"\" AND fe_groups.uid IN (fe_users.usergroup) AND fe_users.uid = " . $user['uid'] . " LIMIT 1";
+                $userGroupResult = $connection->query($sql);
+                $userGroup = reset($userGroupResult);
+            } else {
+                $userGroup = $GLOBALS['TYPO3_DB']->exec_SELECTgetSingleRow(
+                    'fe_groups.felogin_redirectPid', 'fe_users, fe_groups', 'fe_groups.felogin_redirectPid != "" AND fe_groups.uid IN (fe_users.usergroup) AND fe_users.uid = ' . $user['uid']
+                );
+            }
             if (is_array($userGroup) && !empty($userGroup['felogin_redirectPid'])) {
                 $parameterArray['redirecturl'] = $this->getRedirectUrl($userGroup['felogin_redirectPid']);
             } elseif (rtrim(\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL'), '/') !== ($domain = $this->getRedirectForCurrentDomain($user['pid']))) {
@@ -192,14 +196,25 @@ class ToolbarItemHook implements \TYPO3\CMS\Backend\Toolbar\ToolbarItemInterface
             return $domain;
         }
 
-        $rowArray = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-            'domainName, tx_cabagfileexplorer_redirect_to',
-            'sys_domain',
-            'hidden = 0 AND domainName = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($domainArray['host'], 'sys_domain'),
-            '',
-            '',
-            1
-        );
+        if (class_exists(ConnectionPool::class)) {
+            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('sys_domain');
+            $queryBuilder->getRestrictions()
+                ->removeAll()
+                ->add(GeneralUtility::makeInstance(DeletedRestriction::class))
+                ->add(GeneralUtility::makeInstance(HiddenRestriction::class));
+            $rows = $queryBuilder
+                ->select('domainName', 'tx_cabagfileexplorer_redirect_to')
+                ->from('sys_domain')
+                ->where(
+                    $queryBuilder->expr()->eq('domainName', $queryBuilder->createNamedParameter($domainArray['host'], \PDO::PARAM_STR))
+                )
+                ->execute()
+                ->fetch();
+        } else {
+            $rowArray = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+                'domainName, tx_cabagfileexplorer_redirect_to', 'sys_domain', 'hidden = 0 AND domainName = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($domainArray['host'], 'sys_domain'), '', '', 1
+            );
+        }
 
         if (count($rowArray) === 0 || (trim($rowArray[0]['tx_cabagfileexplorer_redirect_to'])) === '') {
             return $domain;
@@ -284,4 +299,5 @@ class ToolbarItemHook implements \TYPO3\CMS\Backend\Toolbar\ToolbarItemInterface
     {
         return 50;
     }
+
 }
